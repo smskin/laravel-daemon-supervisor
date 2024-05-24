@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.24.0@462c80e31c34e58cc4f750c656be3927e80e550e">
+  <file src="src/Commands/DaemonCommand.php">
+    <MissingTemplateParam>
+      <code><![CDATA[Collection<IWorker>]]></code>
+    </MissingTemplateParam>
+    <UnusedClass>
+      <code><![CDATA[DaemonCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Commands/WorkerCommand.php">
+    <UnusedClass>
+      <code><![CDATA[WorkerCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Events/SupervisorLooped.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$supervisor]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Events/UnableToLaunchProcess.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$process]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Events/WorkerProcessRestarting.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$process]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Supervisor.php">
+    <MissingTemplateParam>
+      <code><![CDATA[$this->processes->filter(static function (WorkerProcess $process) {
+            return $process->process->isRunning();
+        })]]></code>
+      <code><![CDATA[$this->workers->each(function (IWorker $worker) {
+            $this->processes->push($this->createProcess($worker)->handleOutputUsing(
+                function ($type, $line) use ($worker) {
+                    echo "\n--------\n";
+                    echo $worker->getSignature() . PHP_EOL;
+                    echo date('Y-m-d H:i:s') . PHP_EOL;
+                    echo 'Message: ' . PHP_EOL;
+                    call_user_func($this->output, $type, $line);
+                }
+            ));
+        })]]></code>
+      <code><![CDATA[Collection]]></code>
+      <code><![CDATA[Collection<IWorker>]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/WorkerProcess.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__call]]></code>
+      <code><![CDATA[continue]]></code>
+      <code><![CDATA[pause]]></code>
+      <code><![CDATA[stop]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+</files>
