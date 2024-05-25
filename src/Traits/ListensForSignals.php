@@ -26,10 +26,6 @@ trait ListensForSignals
             $this->pendingSignals['terminate'] = 'terminate';
         });
 
-        pcntl_signal(SIGUSR1, function () {
-            $this->pendingSignals['restart'] = 'restart';
-        });
-
         pcntl_signal(SIGUSR2, function () {
             $this->pendingSignals['pause'] = 'pause';
         });

@@ -11,6 +11,11 @@ abstract class SupervisorsCommand extends Command
 {
     public function handle()
     {
+        $this->start();
+    }
+
+    protected function start(): void
+    {
         (new Supervisor(
             $this->getWorkers()
         ))->handleOutputUsing(function ($type, $line) {
