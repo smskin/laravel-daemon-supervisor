@@ -35,7 +35,6 @@
         })]]></code>
       <code><![CDATA[Collection]]></code>
       <code><![CDATA[Collection<IWorker>]]></code>
-      <code><![CDATA[Collection<IWorker>]]></code>
       <code><![CDATA[Collection<WorkerProcess>]]></code>
     </MissingTemplateParam>
     <PossiblyUnusedMethod>
@@ -43,14 +42,10 @@
       <code><![CDATA[pause]]></code>
       <code><![CDATA[terminate]]></code>
     </PossiblyUnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$output]]></code>
-    </UnusedProperty>
   </file>
   <file src="src/WorkerProcess.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__call]]></code>
-      <code><![CDATA[handleOutputUsing]]></code>
       <code><![CDATA[stop]]></code>
     </PossiblyUnusedMethod>
   </file>

@@ -24,7 +24,7 @@ class WorkerProcess
     /**
      * The time at which the cooldown period will be over.
      */
-    public CarbonImmutable|null $restartAgainAt;
+    public CarbonImmutable|null $restartAgainAt = null;
 
     /**
      * Create a new worker process instance.

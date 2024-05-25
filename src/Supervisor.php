@@ -26,9 +26,9 @@ class Supervisor
     /**
      * @param Collection<IWorker> $workers
      */
-    public function __construct(Collection $workers)
+    public function __construct(private readonly Collection $workers)
     {
-        $this->processes = $this->createProcesses($workers);
+        $this->processes = $this->createProcesses();
         $this->output = static function () {
         };
     }
@@ -36,6 +36,7 @@ class Supervisor
     public function monitor()
     {
         $this->listenForSignals();
+
         while (true) {
             sleep(1);
             $this->loop();
@@ -118,12 +119,11 @@ class Supervisor
     }
 
     /**
-     * @param Collection<IWorker> $workers
      * @return Collection<WorkerProcess>
      */
-    private function createProcesses(Collection $workers): Collection
+    private function createProcesses(): Collection
     {
-        return $workers->each(function (IWorker $worker) {
+        return $this->workers->map(function (IWorker $worker) {
             return $this->createProcess($worker)
                 ->handleOutputUsing(function ($type, $line) {
                     call_user_func($this->output, $type, $line);
@@ -137,7 +137,7 @@ class Supervisor
         $command = 'exec ' . $escape . PHP_BINARY . $escape . ' artisan ' . $worker->getArtisanCommand();
 
         return new WorkerProcess(
-            Process::fromShellCommandline($command, base_path())
+            Process::fromShellCommandline($command)
                 ->setTimeout(null)
                 ->disableOutput()
         );
