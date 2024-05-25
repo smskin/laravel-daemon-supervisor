@@ -124,7 +124,10 @@ class Supervisor
     private function createProcesses(Collection $workers): Collection
     {
         return $workers->each(function (IWorker $worker) {
-            return $this->createProcess($worker);
+            return $this->createProcess($worker)
+                ->handleOutputUsing(function ($type, $line) {
+                    call_user_func($this->output, $type, $line);
+                });
         });
     }
 
