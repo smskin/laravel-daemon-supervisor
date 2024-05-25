@@ -12,20 +12,26 @@ use Symfony\Component\Process\Process;
 class WorkerProcess
 {
     /**
+     * The underlying Symfony process.
+     */
+    public Process $process;
+
+    /**
      * The output handler callback.
      */
     public Closure $output;
 
     /**
-     * The time at which the cool down period will be over.
+     * The time at which the cooldown period will be over.
      */
-    public CarbonImmutable $restartAgainAt;
+    public CarbonImmutable|null $restartAgainAt;
 
     /**
      * Create a new worker process instance.
      */
-    public function __construct(public readonly Process $process)
+    public function __construct(Process $process)
     {
+        $this->process = $process;
     }
 
     /**
@@ -35,7 +41,7 @@ class WorkerProcess
     {
         $this->output = $callback;
 
-        $this->coolDown();
+        $this->cooldown();
 
         $this->process->start($callback);
 
@@ -44,8 +50,6 @@ class WorkerProcess
 
     /**
      * Pause the worker process.
-     *
-     * @return void
      * @throws ExceptionInterface
      */
     public function pause(): void
@@ -55,8 +59,6 @@ class WorkerProcess
 
     /**
      * Instruct the worker process to continue working.
-     *
-     * @return void
      * @throws ExceptionInterface
      */
     public function continue(): void
@@ -66,8 +68,6 @@ class WorkerProcess
 
     /**
      * Evaluate the current state of the process.
-     *
-     * @return void
      */
     public function monitor(): void
     {
@@ -83,7 +83,7 @@ class WorkerProcess
      *
      * @return void
      */
-    public function restart(): void
+    protected function restart(): void
     {
         if ($this->process->isStarted()) {
             event(new WorkerProcessRestarting($this));
@@ -94,8 +94,6 @@ class WorkerProcess
 
     /**
      * Terminate the underlying process.
-     *
-     * @return void
      * @throws ExceptionInterface
      */
     public function terminate(): void
@@ -105,8 +103,6 @@ class WorkerProcess
 
     /**
      * Stop the underlying process.
-     *
-     * @return void
      */
     public function stop(): void
     {
@@ -117,7 +113,6 @@ class WorkerProcess
 
     /**
      * Send a POSIX signal to the process.
-     *
      * @throws ExceptionInterface
      */
     protected function sendSignal(int $signal): void
@@ -133,21 +128,23 @@ class WorkerProcess
 
     /**
      * Begin the cool-down period for the process.
-     *
-     * @return void
      */
-    protected function coolDown(): void
+    protected function cooldown(): void
     {
         if ($this->coolingDown()) {
             return;
         }
 
-        $this->restartAgainAt = !$this->process->isRunning()
-            ? CarbonImmutable::now()->addMinute()
-            : null;
+        if ($this->restartAgainAt) {
+            $this->restartAgainAt = !$this->process->isRunning()
+                ? CarbonImmutable::now()->addMinute()
+                : null;
 
-        if (!$this->process->isRunning()) {
-            event(new UnableToLaunchProcess($this));
+            if (!$this->process->isRunning()) {
+                event(new UnableToLaunchProcess($this));
+            }
+        } else {
+            $this->restartAgainAt = CarbonImmutable::now()->addSecond();
         }
     }
 
@@ -164,6 +161,9 @@ class WorkerProcess
 
     /**
      * Set the output handler.
+     *
+     * @param Closure $callback
+     * @return $this
      */
     public function handleOutputUsing(Closure $callback): static
     {
@@ -175,7 +175,7 @@ class WorkerProcess
     /**
      * Pass on method calls to the underlying process.
      */
-    public function __call(string $method, array $parameters)
+    public function __call(string $method, array $parameters): mixed
     {
         return $this->process->{$method}(...$parameters);
     }
