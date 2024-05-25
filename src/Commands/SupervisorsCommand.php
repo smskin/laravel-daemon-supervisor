@@ -14,7 +14,7 @@ abstract class SupervisorsCommand extends Command
         (new Supervisor(
             $this->getWorkers()
         ))->handleOutputUsing(function ($type, $line) {
-            $this->output->write($line);
+            $this->info($line);
         })->monitor();
     }
 
