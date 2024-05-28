@@ -96,9 +96,9 @@ class WorkerProcess
      * Terminate the underlying process.
      * @throws ExceptionInterface
      */
-    public function terminate(): void
+    public function terminate(int $status): void
     {
-        $this->sendSignal(SIGTERM);
+        $this->sendSignal($status);
     }
 
     /**

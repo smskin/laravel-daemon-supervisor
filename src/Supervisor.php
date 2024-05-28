@@ -7,15 +7,12 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Collection;
 use SMSkin\LaravelSupervisor\Contracts\IWorker;
 use SMSkin\LaravelSupervisor\Events\SupervisorLooped;
-use SMSkin\LaravelSupervisor\Traits\ListensForSignals;
 use Symfony\Component\Process\Exception\ExceptionInterface;
 use Symfony\Component\Process\Process;
 use Throwable;
 
 class Supervisor
 {
-    use ListensForSignals;
-
     /**
      * @var Collection<WorkerProcess>
      */
@@ -35,8 +32,6 @@ class Supervisor
 
     public function monitor()
     {
-        $this->listenForSignals();
-
         while (true) {
             sleep(1);
             $this->loop();
@@ -80,8 +75,8 @@ class Supervisor
     {
         $status ??= 0;
         $this->working = false;
-        $this->processes->each(static function (WorkerProcess $process) {
-            $process->terminate();
+        $this->processes->each(static function (WorkerProcess $process) use ($status) {
+            $process->terminate($status);
         });
 
         while ($this->processes->filter(static function (WorkerProcess $process) {
@@ -89,6 +84,7 @@ class Supervisor
         })->collapse()->count()) {
             sleep(1);
         }
+        sleep(1);
 
         exit($status);
     }
@@ -106,7 +102,6 @@ class Supervisor
     private function loop(): void
     {
         try {
-            $this->processPendingSignals();
             if ($this->working) {
                 $this->processes->each(static function (WorkerProcess $process) {
                     $process->monitor();
