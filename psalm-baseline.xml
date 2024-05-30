@@ -37,11 +37,6 @@
       <code><![CDATA[Collection<IWorker>]]></code>
       <code><![CDATA[Collection<WorkerProcess>]]></code>
     </MissingTemplateParam>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[continue]]></code>
-      <code><![CDATA[pause]]></code>
-      <code><![CDATA[terminate]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/WorkerProcess.php">
     <PossiblyUnusedMethod>
