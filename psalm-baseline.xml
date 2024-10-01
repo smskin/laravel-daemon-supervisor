@@ -4,14 +4,9 @@
     <MissingTemplateParam>
       <code><![CDATA[Collection<IWorker>]]></code>
     </MissingTemplateParam>
-    <UnusedClass>
-      <code><![CDATA[SupervisorsCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Commands/WorkerCommand.php">
-    <UnusedClass>
-      <code><![CDATA[WorkerCommand]]></code>
-    </UnusedClass>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[handle]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="src/Events/SupervisorLooped.php">
     <PossiblyUnusedProperty>
@@ -27,6 +22,19 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$process]]></code>
     </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Examples/TestSupervisorCommand.php">
+    <MissingTemplateParam>
+      <code><![CDATA[Collection<IWorker>]]></code>
+    </MissingTemplateParam>
+    <UnusedClass>
+      <code><![CDATA[TestSupervisorCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Examples/TestWorkerCommand.php">
+    <UnusedClass>
+      <code><![CDATA[TestWorkerCommand]]></code>
+    </UnusedClass>
   </file>
   <file src="src/Supervisor.php">
     <MissingTemplateParam>
